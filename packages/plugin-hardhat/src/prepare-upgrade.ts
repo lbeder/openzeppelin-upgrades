@@ -12,13 +12,13 @@ export type PrepareUpgradeFunction = (
 ) => Promise<string>;
 
 export function makePrepareUpgrade(hre: HardhatRuntimeEnvironment): PrepareUpgradeFunction {
-  return async function prepareUpgrade(proxy, ImplFactory, opts: ValidationOptions = {}) {
+  return async function prepareUpgrade(proxy, ImplFactory, opts: ValidationOptions = {}, ctorArgs?: unknown[]) {
     const { provider } = hre.network;
 
     const proxyAddress = getContractAddress(proxy);
 
     await setProxyKind(provider, proxyAddress, opts);
 
-    return await deployImpl(hre, ImplFactory, withValidationDefaults(opts), proxyAddress);
+    return await deployImpl(hre, ImplFactory, withValidationDefaults(opts), ctorArgs, proxyAddress);
   };
 }

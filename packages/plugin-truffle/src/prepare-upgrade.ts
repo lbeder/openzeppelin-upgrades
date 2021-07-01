@@ -14,6 +14,7 @@ export async function prepareUpgrade(
   proxy: ContractAddressOrInstance,
   Contract: ContractClass,
   opts: Options = {},
+  ctorArgs?: unknown[],
 ): Promise<string> {
   const requiredOpts: Required<Options> = withDefaults(opts);
 
@@ -23,5 +24,5 @@ export async function prepareUpgrade(
 
   requiredOpts.kind = await setProxyKind(provider, proxyAddress, opts);
 
-  return await deployImpl(Contract, requiredOpts, proxyAddress);
+  return await deployImpl(Contract, requiredOpts, ctorArgs, proxyAddress);
 }

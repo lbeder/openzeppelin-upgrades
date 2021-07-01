@@ -25,7 +25,7 @@ export type UpgradeFunction = (
 ) => Promise<Contract>;
 
 export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunction {
-  return async function upgradeProxy(proxy, ImplFactory, opts: ValidationOptions = {}) {
+  return async function upgradeProxy(proxy, ImplFactory, opts: ValidationOptions = {}, ctorArgs?: unknown[]) {
     const { provider } = hre.network;
 
     const proxyAddress = getContractAddress(proxy);
@@ -33,7 +33,7 @@ export function makeUpgradeProxy(hre: HardhatRuntimeEnvironment): UpgradeFunctio
     await setProxyKind(provider, proxyAddress, opts);
 
     const upgradeTo = await getUpgrader(proxyAddress, ImplFactory.signer);
-    const nextImpl = await deployImpl(hre, ImplFactory, withValidationDefaults(opts), proxyAddress);
+    const nextImpl = await deployImpl(hre, ImplFactory, withValidationDefaults(opts), ctorArgs, proxyAddress);
     const upgradeTx = await upgradeTo(nextImpl);
 
     const inst = ImplFactory.attach(proxyAddress);

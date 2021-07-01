@@ -26,6 +26,7 @@ export interface DeployFunction {
 
 export interface DeployOptions extends ValidationOptions {
   initializer?: string | false;
+  ctorArgs?: unknown[];
 }
 
 export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction {
@@ -54,7 +55,7 @@ export function makeDeployProxy(hre: HardhatRuntimeEnvironment): DeployFunction 
       }
     }
 
-    const impl = await deployImpl(hre, ImplFactory, requiredOpts);
+    const impl = await deployImpl(hre, ImplFactory, requiredOpts, opts.ctorArgs);
     const data = getInitializerData(ImplFactory, args, opts.initializer);
 
     let proxyDeployment: Required<ProxyDeployment & DeployTransaction>;

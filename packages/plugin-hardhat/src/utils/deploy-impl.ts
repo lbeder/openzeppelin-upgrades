@@ -21,6 +21,7 @@ export async function deployImpl(
   hre: HardhatRuntimeEnvironment,
   ImplFactory: ContractFactory,
   requiredOpts: Required<ValidationOptions>,
+  ctorArgs: unknown[] = [],
   proxyAddress?: string,
 ): Promise<string> {
   const { provider } = hre.network;
@@ -38,7 +39,7 @@ export async function deployImpl(
   }
 
   return await fetchOrDeploy(version, provider, async () => {
-    const deployment = await deploy(ImplFactory);
+    const deployment = await deploy(ImplFactory, ctorArgs);
     return { ...deployment, layout };
   });
 }

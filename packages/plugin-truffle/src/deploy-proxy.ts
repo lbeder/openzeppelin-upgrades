@@ -15,6 +15,7 @@ import {
 
 interface DeployOptions extends Options {
   initializer?: string | false;
+  ctorArgs?: unknown[];
 }
 
 export async function deployProxy(Contract: ContractClass, opts?: Options): Promise<ContractInstance>;
@@ -43,7 +44,7 @@ export async function deployProxy(
     }
   }
 
-  const impl = await deployImpl(Contract, requiredOpts);
+  const impl = await deployImpl(Contract, requiredOpts, opts.ctorArgs);
   const data = getInitializerData(Contract, args, opts.initializer);
 
   let proxyDeployment: Required<ProxyDeployment>;

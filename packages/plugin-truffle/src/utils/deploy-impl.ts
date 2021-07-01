@@ -18,6 +18,7 @@ import { wrapProvider } from './wrap-provider';
 export async function deployImpl(
   Contract: ContractClass,
   requiredOpts: Required<Options>,
+  ctorArgs: unknown[] = [],
   proxyAddress?: string,
 ): Promise<string> {
   if (requiredOpts.kind === 'transparent') {
@@ -40,7 +41,7 @@ export async function deployImpl(
   }
 
   return await fetchOrDeploy(version, provider, async () => {
-    const deployment = await deploy(requiredOpts.deployer, Contract);
+    const deployment = await deploy(requiredOpts.deployer, Contract, ctorArgs);
     return { ...deployment, layout };
   });
 }
